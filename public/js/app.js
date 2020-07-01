@@ -65842,13 +65842,29 @@ var App = /*#__PURE__*/function (_Component) {
 
   var _super = _createSuper(App);
 
-  function App() {
+  function App(props) {
+    var _this;
+
     _classCallCheck(this, App);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, props);
+    _this.state = {
+      name: '',
+      tasks: []
+    };
+    _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(App, [{
+    key: "handleChange",
+    value: function handleChange(e) {
+      this.setState({
+        name: e.target.value
+      });
+    } // console.log(e.target.value);
+
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -65866,7 +65882,10 @@ var App = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+        onChange: this.handleChange,
         className: "form-control",
+        value: this.state.name,
+        maxLength: "300",
         rows: "5",
         placeholder: "Create a new task",
         required: true
