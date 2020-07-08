@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Axios from 'axios';
 
  class App extends Component{
      constructor (props){
@@ -8,6 +9,7 @@ import React, {Component} from 'react';
             tasks:[]
          }
          this.handleChange = this.handleChange.bind(this);
+         this.handleSubmit = this.handleSubmit.bind(this);
      }
      handleChange(e){
          this.setState  ({
@@ -16,8 +18,15 @@ import React, {Component} from 'react';
            
          }
 // console.log(e.target.value);
-     
-
+     //handle submit
+handleSubmit(e){
+    e.preventDefault();
+    axios.post('/tasks', {
+        name: this.state.name
+    }).then(response=>{
+        console.log('from handle submit', response)
+    });
+}
     render(){
     return (
         <div className="container">
@@ -27,7 +36,7 @@ import React, {Component} from 'react';
                         <div className="card-header">App Component</div>
 
                         <div className="card-body">
-                        <form>
+                        <form onSubmit={this.handleSubmit}>
                             <div className="form-group">
                                 <textarea 
                                 onChange={this.handleChange}
