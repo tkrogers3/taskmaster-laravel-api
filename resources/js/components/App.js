@@ -10,7 +10,8 @@ import Axios from 'axios';
          }
          this.handleChange = this.handleChange.bind(this);
          this.handleSubmit = this.handleSubmit.bind(this);
-     }
+         this.renderTasks= this.renderTasks.bind(this);    
+         }
      handleChange(e){
          this.setState  ({
             name: e.target.value
@@ -24,9 +25,25 @@ handleSubmit(e){
     axios.post('/tasks', {
         name: this.state.name
     }).then(response=>{
-        console.log('from handle submit', response)
+       this.setState({
+           tasks: [response.data, ...this.state.tasks],
+           name: ''
+       })
     });
 }
+
+renderTasks(){
+    return this.state.tasks.map(task =>(
+        <div key={task.id} className="media">
+        <div className="media-body">
+        <div>
+            {task.name}
+        </div>
+        </div>
+        </div>
+    ) );
+}
+
     render(){
     return (
         <div className="container">
@@ -47,6 +64,8 @@ handleSubmit(e){
                                  placeholder="Create a new task" 
                                  required
                                   />
+                                  <hr />
+                                  {this.renderTasks()}
                             </div>
                             <button type="submit" className="btn btn-info">
                             Create Task
