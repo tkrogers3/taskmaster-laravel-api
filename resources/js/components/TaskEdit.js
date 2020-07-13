@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import Axios from 'axios';
-import { Link} from 'react-router-dom';
 
-class App extends Component {
+class TaskEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -11,8 +9,7 @@ class App extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.renderTasks = this.renderTasks.bind(this);
-        this.handleDelete = this.handleDelete.bind(this);
+
     }
     handleChange(e) {
         this.setState({
@@ -34,39 +31,13 @@ class App extends Component {
         });
     }
 
-    handleDelete(id){
-        //remove from local state
-        const deleteId = task => task.id !== id;
-        const updatedTasks = this.state.tasks.filter(deleteId);
-        this.setState({tasks: updatedTasks})
-
-        //Delete request to back end
-axios.delete(`/tasks/${id}`);
-
-
-
-    }
-    renderTasks() {
-        return this.state.tasks.map(task => (
-            <div key={task.id} className="media">
-                <div className="media-body">
-                    <div>
-                        {task.name} {''}
-                        <Link to={`/${task.id}/edit`} className="btn btn-sm btn-success float-right">Update</Link>
-                        <button
-                         onClick ={() => this.handleDelete(task.id)} className="btn btn-sm btn-danger float-right">
-                                        Delete
-                            </button>
-                    </div>
-                </div>
-            </div>
-        ));
-    }
+  
     //pull tasks from backend via axios
     getTasks() {
-        axios.get('/tasks').then(response => 
+        axios.get(`/tasks/${this.props.match.params.id}/edit`).then(response => 
             this.setState({
-            tasks: [...response.data.tasks]
+            tasks: response.data.task,
+            name: response.data.task.name
         }
         ))
     };
@@ -77,6 +48,7 @@ axios.delete(`/tasks/${id}`);
     }
 
     render() {
+        console.log(this.props.match.params.id)
         return (
             <div className="container">
                 <div className="row justify-content-center">
@@ -97,7 +69,7 @@ axios.delete(`/tasks/${id}`);
                                             required
                                         />
                                         <hr />
-                                        {this.renderTasks()}
+                                
                                     </div>
                                     <button type="submit" className="btn btn-info">
                                         Create Task
@@ -115,4 +87,5 @@ axios.delete(`/tasks/${id}`);
     }
 }
 
-export default App;
+
+export default TaskEdit;
