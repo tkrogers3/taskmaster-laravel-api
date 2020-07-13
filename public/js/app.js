@@ -65870,6 +65870,7 @@ var App = /*#__PURE__*/function (_Component) {
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     _this.renderTasks = _this.renderTasks.bind(_assertThisInitialized(_this));
+    _this.handleDelete = _this.handleDelete.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -65898,16 +65899,56 @@ var App = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
+    key: "handleDelete",
+    value: function handleDelete(id) {
+      //remove from local state
+      var deleteId = function deleteId(task) {
+        return task.id !== id;
+      };
+
+      var updatedTasks = this.state.tasks.filter(deleteId);
+      this.setState({
+        tasks: updatedTasks
+      }); //Delete request to back end
+
+      axios["delete"]("/tasks/".concat(id));
+    }
+  }, {
     key: "renderTasks",
     value: function renderTasks() {
+      var _this3 = this;
+
       return this.state.tasks.map(function (task) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: task.id,
           className: "media"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "media-body"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, task.name)));
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, task.name, " ", '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          onClick: function onClick() {
+            return _this3.handleDelete(task.id);
+          },
+          className: "btn btn-large btn-danger float-right"
+        }, "Delete"))));
       });
+    } //pull tasks from backend via axios
+
+  }, {
+    key: "getTasks",
+    value: function getTasks() {
+      var _this4 = this;
+
+      axios.get('/tasks').then(function (response) {
+        return _this4.setState({
+          tasks: _toConsumableArray(response.data.tasks)
+        });
+      });
+    }
+  }, {
+    key: "componentWillMount",
+    //lifecycle method
+    value: function componentWillMount() {
+      this.getTasks();
     }
   }, {
     key: "render",
