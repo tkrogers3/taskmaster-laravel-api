@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router-dom';
 
 class TaskEdit extends Component {
     constructor(props) {
@@ -21,13 +22,11 @@ class TaskEdit extends Component {
     //handle submit
     handleSubmit(e) {
         e.preventDefault();
-        axios.post('/tasks', {
+        axios.put(`/tasks/${this.props.match.params.id}`, {
             name: this.state.name
-        }).then(response => {
-            this.setState({
-                tasks: [response.data, ...this.state.tasks],
-                name: ''
-            })
+        })
+        .then(response => {
+           this.props.history.push('/');
         });
     }
 
@@ -36,7 +35,7 @@ class TaskEdit extends Component {
     getTasks() {
         axios.get(`/tasks/${this.props.match.params.id}/edit`).then(response => 
             this.setState({
-            tasks: response.data.task,
+            task: response.data.task,
             name: response.data.task.name
         }
         ))
@@ -54,7 +53,7 @@ class TaskEdit extends Component {
                 <div className="row justify-content-center">
                     <div className="col-md-8">
                         <div className="card">
-                            <div className="card-header">App Component</div>
+                            <div className="card-header">Edit Task</div>
 
                             <div className="card-body">
                                 <form onSubmit={this.handleSubmit}>
@@ -72,7 +71,7 @@ class TaskEdit extends Component {
                                 
                                     </div>
                                     <button type="submit" className="btn btn-info">
-                                        Create Task
+                                       Edit Task
                             </button>
 
                                 </form>
